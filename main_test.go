@@ -20,3 +20,14 @@ func TestSuffixCheckUppercase(t *testing.T) {
 		t.Errorf("lower bmp == bmp")
 	}
 }
+
+func TestRegExp(t *testing.T) {
+	testList := []string{
+		"abc.bmp", "abc.BMP", "abc.jpg", "abc.JPG", "abc.a.png", "abc.a.PNG",
+	}
+	for _, fileName := range testList {
+		if !CheckImageFile(fileName) {
+			t.Errorf("Not Parse filename %s", fileName)
+		}
+	}
+}

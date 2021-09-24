@@ -7,11 +7,12 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 )
 
 // Find recursive bmp | jpg and json given path
-// Print Result
+// Print Result And Save CSV
 func PrintDirInfo(path string, w *csv.Writer) {
 	if files, err := ioutil.ReadDir(path); err != nil {
 		log.Fatal(err)
@@ -23,7 +24,7 @@ func PrintDirInfo(path string, w *csv.Writer) {
 				PrintDirInfo(path+"\\"+file.Name(), w)
 			} else {
 				fileName := file.Name()
-				if strings.HasSuffix(fileName, "jpg") || strings.HasSuffix(fileName, "bmp") {
+				if CheckImageFile(fileName) {
 					imgs += 1
 				} else if strings.HasSuffix(fileName, "json") {
 					labels += 1
@@ -33,6 +34,11 @@ func PrintDirInfo(path string, w *csv.Writer) {
 		w.Write([]string{path, fmt.Sprint(len(files)), fmt.Sprint(imgs), fmt.Sprint(labels)})
 		fmt.Printf("%s, total: %d, imgs: %d, labels: %d\n", path, len(files), imgs, labels)
 	}
+}
+
+func CheckImageFile(fileName string) bool {
+	pat := regexp.MustCompile(`(bmp|BMP|jpg|JPG|png|PNG)$`)
+	return pat.MatchString(fileName)
 }
 
 func main() {
