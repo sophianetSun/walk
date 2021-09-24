@@ -1,2 +1,0 @@
-# walk
-Go Directory walking
